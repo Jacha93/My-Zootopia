@@ -13,10 +13,12 @@ def get_animals_information():
         if all(k in animal for k in ['name', 'locations', 'characteristics']) and \
            all(k in animal['characteristics'] for k in ['diet', 'type']):
               output += (
+                  '<li class="cards__item">'
                   f"Name: {animal['name']}\n"
-                  f"Diet: {animal['characteristics']['diet']}\n"
-                  f"Location: {', '.join(animal['locations'])}\n"
-                  f"Type: {animal['characteristics']['type']}\n\n"
+                  f"Diet: {animal['characteristics']['diet']}<br/>\n"
+                  f"Location: {', '.join(animal['locations'])}<br/>\n"
+                  f"Type: {animal['characteristics']['type']}<br/>\n"
+                  '</li>'
               )
         else:
             continue
