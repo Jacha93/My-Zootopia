@@ -3,31 +3,39 @@ import json
 
 def load_data(file_path):
     """Load data from a JSON file."""
-    with open(file_path, 'r', encoding='utf-8') as handle:
-        return json.load(handle)
+    try:
+        with open(file_path, 'r', encoding='utf-8') as handle:
+            return json.load(handle)
+    except FileNotFoundError:
+        print(f"Error: The file {file_path} was not found.")
+        return []
 
 
 def serialize_animals_to_html(animal):
     """Generate HTML snippet for a single animal."""
-    return (
-        '<li class="cards__item">'
-        f'<div class="card__title">{animal["name"]}</div>\n'
-        '<p class="card__text">'
-        f'<strong>Diet:</strong> {animal["characteristics"]["diet"]}<br/>\n'
-        f'<strong>Location:</strong> {", ".join(animal["locations"])}<br/>\n'
-        f'<strong>Type:</strong> {animal["characteristics"]["type"]}<br/>\n'
-        '</p>'
-        '</li>'
-    )
+    name = animal.get("name", "Unknown")
+    characteristics = animal.get("characteristics", {})
+    diet = characteristics.get("diet", "N/A")
+    animal_type = characteristics.get("type", "N/A")
+    locations = animal.get("locations", [])
+    location_str = locations[0] if locations else "N/A"
+    return f"""
+    <li class="cards__item">
+    <div class="card__title">{name}</div>
+    <p class="card__text">
+        <strong>Diet:</strong> {diet}<br/>
+        <strong>Location:</strong> {location_str}<br/>
+        <strong>Type:</strong> {animal_type}<br/>
+    </p>
+    </li>
+    """
 
 
 def get_animals_information():
     """Generate a string with information about animals."""
     output = ""
     for animal in animals_data:
-        if all(k in animal for k in ['name', 'locations', 'characteristics']) and \
-           all(k in animal['characteristics'] for k in ['diet', 'type']):
-            output += serialize_animals_to_html(animal)
+        output += serialize_animals_to_html(animal)
     return output
 
 
